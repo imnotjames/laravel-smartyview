@@ -90,6 +90,8 @@ class SmartyServiceProvider extends ServiceProvider {
 			$smarty->caching = \Smarty::CACHING_LIFETIME_SAVED;
 		}
 
+		$this->app['events']->fire('smartyview.smarty', array('smarty' => $smarty));
+
 		return $smarty;
 	}
 }

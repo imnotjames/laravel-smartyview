@@ -11,6 +11,7 @@ namespace SmartyView;
 
 use Illuminate\Support\ServiceProvider;
 use SmartyView\Engines\SmartyEngine;
+use SmartyView\Smarty\Resource\Laravel as LaravelResource;
 
 class SmartyServiceProvider extends ServiceProvider {
 	public function register() {
@@ -58,6 +59,10 @@ class SmartyServiceProvider extends ServiceProvider {
 	public function getSmarty() {
 		$smarty = new \Smarty();
 
+		$finder = $this->app['view.finder'];
+
+		$extension = $this->app['config']->get('smartyview::extension', 'tpl');
+
 		$escapeHTML = $this->app['config']->get('smartyview::escape_html', true);
 
 		$errorReporting = $this->app['config']->get('smartyview::error_reporting', 0);
@@ -89,6 +94,10 @@ class SmartyServiceProvider extends ServiceProvider {
 			$smarty->compile_check = true;
 			$smarty->caching = \Smarty::CACHING_LIFETIME_SAVED;
 		}
+
+		$smarty->registerResource('laravel', new LaravelResource($finder, $extension));
+
+		$smarty->default_resource_type = 'laravel';
 
 		$this->app['events']->fire('smartyview.smarty', array('smarty' => $smarty));
 

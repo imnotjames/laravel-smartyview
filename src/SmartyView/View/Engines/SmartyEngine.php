@@ -35,6 +35,8 @@ class SmartyEngine implements EngineInterface {
 	public function get($path, array $data = array()) {
 		$template = $this->smarty->createTemplate($path);
 
+		$template->assign($this->smarty->getTemplateVars());
+
 		$template->assign($data);
 
 		return $template->fetch();

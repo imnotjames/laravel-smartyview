@@ -14,6 +14,8 @@ use SmartyView\Engines\SmartyEngine;
 use SmartyView\Smarty\Resource\Laravel as LaravelResource;
 
 class SmartyServiceProvider extends ServiceProvider {
+	protected $plugins = array();
+
 	public function register() {
 		$this->app['config']->package('imnotjames/smartyview', __DIR__.'/../config');
 
@@ -93,6 +95,14 @@ class SmartyServiceProvider extends ServiceProvider {
 		if ($shouldCache) {
 			$smarty->compile_check = true;
 			$smarty->caching = \Smarty::CACHING_LIFETIME_SAVED;
+		}
+
+		foreach($this->plugins as $name => $plugin) {
+			$smarty->registerPlugin(
+				$plugin->getType(),
+				$name,
+				array($plugin, 'pluginCallback')
+			);
 		}
 
 		$smarty->registerResource('laravel', new LaravelResource($finder, $extension));

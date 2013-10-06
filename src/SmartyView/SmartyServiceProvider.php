@@ -13,6 +13,7 @@ use Illuminate\Support\ServiceProvider;
 use SmartyView\Engines\SmartyEngine;
 use SmartyView\Smarty\Resource\Laravel as LaravelResource;
 use SmartyView\Smarty\Plugins\URL as URLPlugin;
+use SmartyView\Smarty\Plugins\Localize as LocalizePlugin;
 
 class SmartyServiceProvider extends ServiceProvider {
 	protected $plugins = array();
@@ -29,7 +30,8 @@ class SmartyServiceProvider extends ServiceProvider {
 		\Smarty::muteExpectedErrors();
 
 		$this->plugins = array(
-			'url' => new URLPlugin()
+			'url' => new URLPlugin(),
+			'localize' => new LocalizePlugin()
 		);
 	}
 

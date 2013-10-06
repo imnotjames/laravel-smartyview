@@ -12,6 +12,7 @@ namespace SmartyView;
 use Illuminate\Support\ServiceProvider;
 use SmartyView\Engines\SmartyEngine;
 use SmartyView\Smarty\Resource\Laravel as LaravelResource;
+use SmartyView\Smarty\Plugins\URL as URLPlugin;
 
 class SmartyServiceProvider extends ServiceProvider {
 	protected $plugins = array();
@@ -26,6 +27,10 @@ class SmartyServiceProvider extends ServiceProvider {
 
 	public function boot() {
 		\Smarty::muteExpectedErrors();
+
+		$this->plugins = array(
+			'url' => new URLPlugin()
+		);
 	}
 
 	public function registerSmartyEngine() {

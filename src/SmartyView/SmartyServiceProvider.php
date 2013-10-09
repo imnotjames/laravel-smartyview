@@ -128,6 +128,8 @@ class SmartyServiceProvider extends ServiceProvider {
 			$smarty->default_resource_type = $defaultResource;
 		}
 
+		$smarty->template_class = '\SmartyView\Smarty\Template\Laravel';
+
 		$this->app['events']->fire('smartyview.smarty', array('smarty' => $smarty));
 
 		return $smarty;

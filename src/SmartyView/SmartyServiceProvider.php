@@ -67,6 +67,8 @@ class SmartyServiceProvider extends ServiceProvider {
 
 		$escapeHTML = $this->app['config']->get('smartyview::escape_html', true);
 
+		$allowOtherTemplateTypes = $this->app['config']->get('smartyview::allow_other_template_types', true);
+
 		$errorReporting = $this->app['config']->get('smartyview::error_reporting', 0);
 
 		$shouldCache = $this->app['config']->get('smartyview::cache', false);
@@ -128,7 +130,9 @@ class SmartyServiceProvider extends ServiceProvider {
 			$smarty->default_resource_type = $defaultResource;
 		}
 
-		$smarty->template_class = '\SmartyView\Smarty\Template\Laravel';
+		if ($allowOtherTemplateTypes) {
+			$smarty->template_class = '\SmartyView\Smarty\Template\Laravel';
+		}
 
 		$this->app['events']->fire('smartyview.smarty', array('smarty' => $smarty));
 

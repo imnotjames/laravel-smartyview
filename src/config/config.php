@@ -14,6 +14,8 @@ return array(
 
 	'escape_html' => true,
 
+	'allow_other_template_types' => true,
+
 	// 'plugins' => array(
 	//
 	// ),

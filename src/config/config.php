@@ -14,9 +14,13 @@ return array(
 
 	'escape_html' => true,
 
-	'plugins' => array(),
+	// 'plugins' => array(
+	//
+	// ),
 
-	'default_resource' => 'laravel',
+	// 'resources' => array(
+	//
+	// ),
 
-	'resources' => array(),
+	// 'default_resource' => '',
 );

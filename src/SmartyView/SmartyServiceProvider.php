@@ -16,8 +16,6 @@ use SmartyView\Smarty\Plugins\URL as URLPlugin;
 use SmartyView\Smarty\Plugins\Localize as LocalizePlugin;
 
 class SmartyServiceProvider extends ServiceProvider {
-	protected $plugins = array();
-
 	public function register() {
 		$this->app['config']->package('imnotjames/smartyview', __DIR__.'/../config');
 
@@ -28,11 +26,6 @@ class SmartyServiceProvider extends ServiceProvider {
 
 	public function boot() {
 		\Smarty::muteExpectedErrors();
-
-		$this->plugins = array(
-			'url' => new URLPlugin(),
-			'localize' => new LocalizePlugin()
-		);
 	}
 
 	public function registerSmartyEngine() {
@@ -89,6 +82,21 @@ class SmartyServiceProvider extends ServiceProvider {
 			)
 		);
 
+		$plugins = $this->app['config']->get('smartyview::plugins',
+			array(
+				'url' => new URLPlugin(),
+				'localize' => new LocalizePlugin()
+			)
+		);
+
+		$resources = $this->app['config']->get('smartyview::resources',
+			array(
+				'laravel' => new LaravelResource($finder, $extension)
+			)
+		);
+
+		$defaultResource = $this->app['config']->get('smartyview::default_resource', empty($resources) ? null : key($resources));
+
 		$smarty->escape_html = $escapeHTML;
 
 		$smarty->error_reporting = $errorReporting;
@@ -104,7 +112,7 @@ class SmartyServiceProvider extends ServiceProvider {
 			$smarty->caching = \Smarty::CACHING_LIFETIME_SAVED;
 		}
 
-		foreach($this->plugins as $name => $plugin) {
+		foreach ($plugins as $name => $plugin) {
 			$smarty->registerPlugin(
 				$plugin->getType(),
 				$name,
@@ -112,9 +120,13 @@ class SmartyServiceProvider extends ServiceProvider {
 			);
 		}
 
-		$smarty->registerResource('laravel', new LaravelResource($finder, $extension));
+		foreach ($resources as $name => $resource) {
+			$smarty->registerResource($name, $resource);
+		}
 
-		$smarty->default_resource_type = 'laravel';
+		if (!is_null($defaultResource)) {
+			$smarty->default_resource_type = $defaultResource;
+		}
 
 		$this->app['events']->fire('smartyview.smarty', array('smarty' => $smarty));
 

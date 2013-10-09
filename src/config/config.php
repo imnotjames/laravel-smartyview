@@ -12,5 +12,11 @@ return array(
 
 	'error_reporting' => 0,
 
-	'escape_html' => true,	
+	'escape_html' => true,
+
+	'plugins' => array(),
+
+	'default_resource' => 'laravel',
+
+	'resources' => array(),
 );
